@@ -117,7 +117,7 @@ export function DropZone() {
 						</SortableContext>
 					</Droppable>
 
-					<div className='mt-2 flex-1 rounded border bg-slate-50'>
+					<div className='mt-2 flex-1 rounded border max-w-lg overflow-hidden bg-slate-50'>
 						<div className='flex flex-col border-b p-2'>
 							<p className='text-lg font-semibold'>
 								Run the workflows
