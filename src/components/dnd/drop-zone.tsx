@@ -4,34 +4,21 @@ import {
 	DndContext,
 	DragEndEvent,
 	PointerSensor,
-	UniqueIdentifier,
 	closestCenter,
 	useSensor,
 	useSensors
 } from '@dnd-kit/core'
-import {
-	arrayMove,
-	SortableContext,
-	verticalListSortingStrategy
-} from '@dnd-kit/sortable'
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { Draggable } from './draggable'
 import { Droppable } from './droppable'
 import { SortableItem } from './sortable-item'
 import { Play } from 'lucide-react'
-
-type TDraggableItems = { name: string; id: UniqueIdentifier; image: string }
-
-const defaultDraggables: TDraggableItems[] = [
-	{ name: 'send email', id: v4(), image: '/email.svg' },
-	{ name: 'make api call', id: v4(), image: '/logo.png' },
-	{ name: 'send notification', id: v4(), image: '/notification.png' },
-	{ name: 'write to database', id: v4(), image: '/database.png' }
-]
+import { useDraggableItemsStore, useSortableItemsStore } from '../store/store'
 
 export function DropZone() {
-	const [items, setItems] = useState<TDraggableItems[]>([])
-	const [draggables, setDraggables] =
-		useState<TDraggableItems[]>(defaultDraggables)
+	const { draggableItems } = useDraggableItemsStore()
+	const { sortableItems, handleRemove, handleDragEnd } =
+		useSortableItemsStore()
 
 	const sensors = useSensors(
 		useSensor(PointerSensor, {
@@ -41,43 +28,15 @@ export function DropZone() {
 		})
 	)
 
-	const handleDragEnd = (event: DragEndEvent) => {
-		const { over, active } = event
-
-		if (
-			over &&
-			over.id === 'dropzone' &&
-			!items.some((item) => item.id === active.id)
-		) {
-			let item = draggables.find((item) => item.id === active.id)!
-
-			setItems((prev) => [
-				...prev,
-				{ name: item.name, id: v4(), image: item.image }
-			])
-		} else if (over && over.id !== 'dropzone') {
-			setItems((prev) => {
-				const oldIndex = prev.indexOf(
-					items.find((item) => item.id === active.id)!
-				)
-				const newIndex = prev.indexOf(
-					items.find((item) => item.id === over.id)!
-				)
-				return arrayMove(prev, oldIndex, newIndex)
-			})
-		}
-	}
-
-	// Handle remove item
-	const handleRemove = (id: UniqueIdentifier) => {
-		setItems((prev) => prev.filter((item) => item.id !== id))
+	const handleDragEnded = (event: DragEndEvent) => {
+		handleDragEnd(event, draggableItems)
 	}
 
 	return (
 		<DndContext
 			sensors={sensors}
 			collisionDetection={closestCenter}
-			onDragEnd={handleDragEnd}
+			onDragEnd={handleDragEnded}
 		>
 			<div className='flex h-full w-full flex-1 flex-row items-start gap-4'>
 				<div className='flex h-[91vh]  flex-col gap-2 py-2'>
@@ -87,7 +46,7 @@ export function DropZone() {
 							Simplifed automation workflows
 						</p>
 					</div>
-					{draggables.map((item) => (
+					{draggableItems.map((item) => (
 						<Draggable
 							key={v4()}
 							id={String(item.id)}
@@ -119,11 +78,11 @@ export function DropZone() {
 					</div>
 
 					<SortableContext
-						items={items}
+						items={sortableItems}
 						strategy={verticalListSortingStrategy}
 					>
 						<div className='space-y-2 p-3'>
-							{items.map((item) => (
+							{sortableItems.map((item) => (
 								<SortableItem
 									key={v4()}
 									image={item.image}
