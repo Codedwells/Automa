@@ -4,14 +4,6 @@ import { CSS } from '@dnd-kit/utilities'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import { Settings2, Trash, Wrench } from 'lucide-react'
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
 import ConfigureFlow from '../modals/configure-flow'
 
 type SortableItemProps = {

@@ -12,6 +12,12 @@ import {
 import Image from 'next/image'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
+import { Label } from '../ui/label'
+import { useState } from 'react'
+import {
+	TWorkflowItem,
+	useSortableItemsStore
+} from '../store/sortable-items-store'
 
 type ConfigureFlowProps = {
 	children: React.ReactNode
@@ -26,6 +32,21 @@ export default function ConfigureFlow({
 	id,
 	name
 }: ConfigureFlowProps) {
+	const { addWorkflow, sortableItems } = useSortableItemsStore()
+	const [workflowName, setWorkflowName] = useState('')
+	const [workflowEndpoint, setWorkflowEndpoint] = useState('')
+
+	const handleAddWorkflow = () => {
+		if (workflowName && workflowEndpoint) {
+			addWorkflow(id, { name: workflowName, endpoint: workflowEndpoint })
+			setWorkflowName('')
+			setWorkflowEndpoint('')
+		}
+	}
+
+	const currentWorkflows =
+		sortableItems.find((item) => item.id === id)?.workflows || []
+
 	return (
 		<Credenza>
 			<CredenzaTrigger asChild>{children}</CredenzaTrigger>
@@ -49,9 +70,31 @@ export default function ConfigureFlow({
 					</div>
 				</CredenzaHeader>
 				<CredenzaBody>
-					<div className='flex mt-4 items-center gap-2'>
-						<Input placeholder='https://api.myapp.com/api/v1/resource' />
-						<Button>Add</Button>
+					<div className='mt-4 flex flex-col gap-2'>
+						<div className='flex flex-col gap-4'>
+							<div className='flex flex-col gap-2'>
+								<Label>Name</Label>
+								<Input
+									placeholder='name'
+									value={workflowName}
+									onChange={(e) =>
+										setWorkflowName(e.target.value)
+									}
+								/>
+							</div>
+							<div className='flex flex-col gap-2'>
+								<Label>Endpoint</Label>
+								<Input
+									placeholder='https://api.myapp.com/api/v1/resource'
+									type='url'
+									value={workflowEndpoint}
+									onChange={(e) =>
+										setWorkflowEndpoint(e.target.value)
+									}
+								/>
+							</div>
+						</div>
+						<Button onClick={handleAddWorkflow}>Add</Button>
 					</div>
 					<div className='mt-4'>
 						<h1 className='text-lg font-semibold text-blue-950'>
@@ -61,6 +104,14 @@ export default function ConfigureFlow({
 							Here are the configured endpoints for this workflow.
 						</p>
 					</div>
+					<ul className='mt-4'>
+						{currentWorkflows.map((workflow, index) => (
+							<li key={index}>
+								<strong>{workflow.name}:</strong>{' '}
+								{workflow.endpoint}
+							</li>
+						))}
+					</ul>
 				</CredenzaBody>
 			</CredenzaContent>
 		</Credenza>
