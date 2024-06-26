@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDroppable } from '@dnd-kit/core';
+import { cn } from '@/lib/utils';
 
 type DroppableProps = {
   children: React.ReactNode;
@@ -11,12 +12,9 @@ export function Droppable({ children, className, id }: DroppableProps) {
   const { isOver, setNodeRef } = useDroppable({
     id,
   });
-  const style = {
-    color: isOver ? 'green' : undefined,
-  };
 
   return (
-    <div ref={setNodeRef} style={style} className={className}>
+    <div ref={setNodeRef} className={cn({"!bg-green-100":isOver},className)}>
       {children}
     </div>
   );

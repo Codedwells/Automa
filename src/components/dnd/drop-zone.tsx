@@ -3,8 +3,11 @@ import { v4 } from 'uuid'
 import {
 	DndContext,
 	DragEndEvent,
+	PointerSensor,
 	UniqueIdentifier,
-	closestCenter
+	closestCenter,
+	useSensor,
+	useSensors
 } from '@dnd-kit/core'
 import {
 	arrayMove,
@@ -28,6 +31,14 @@ export function DropZone() {
 	const [items, setItems] = useState<TDraggableItems[]>([])
 	const [draggables, setDraggables] =
 		useState<TDraggableItems[]>(defaultDraggables)
+
+	const sensors = useSensors(
+		useSensor(PointerSensor, {
+			activationConstraint: {
+                distance: 50
+			}
+		})
+	)
 
 	const handleDragEnd = (event: DragEndEvent) => {
 		const { over, active } = event
@@ -53,12 +64,14 @@ export function DropZone() {
 		}
 	}
 
-	const handleRemove = (id: string) => {
+	// Handle remove item
+	const handleRemove = (id: UniqueIdentifier) => {
 		setItems((prev) => prev.filter((item) => item.id !== id))
 	}
 
 	return (
 		<DndContext
+			sensors={sensors}
 			collisionDetection={closestCenter}
 			onDragEnd={handleDragEnd}
 		>
@@ -76,7 +89,7 @@ export function DropZone() {
 				</div>
 				<Droppable
 					id='dropzone'
-					className='border-red h-[300px] w-[300px] items-center justify-center rounded-md border-dashed border-black bg-gray-100 p-4'
+					className='border-red h-fit min-h-[300px] w-[300px] items-center justify-center rounded-md border-dashed border-black bg-gray-100 p-4'
 				>
 					<SortableContext
 						items={items}

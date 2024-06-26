@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 
@@ -16,6 +16,7 @@ export function SortableItem({ id, name, onRemove }: SortableItemProps) {
 		transition
 	}
 
+
 	return (
 		<div
 			ref={setNodeRef}
@@ -24,13 +25,12 @@ export function SortableItem({ id, name, onRemove }: SortableItemProps) {
 			{...listeners}
 			className='flex justify-between rounded-lg bg-blue-400 p-4'
 		>
-			<p>{name}</p>
-			<p>{id}</p>
+			<div className='flex flex-col'>
+				<p className='text-wh'>{name}</p>
+			</div>
 			<button
-				onClick={(e) => {
-					e.stopPropagation()
-					onRemove(id)
-				}}
+				id={`remove-${id}`}
+                onClick={() => onRemove(id)}
 				className='ml-2 border p-1 text-white hover:opacity-80 active:opacity-50'
 			>
 				X
