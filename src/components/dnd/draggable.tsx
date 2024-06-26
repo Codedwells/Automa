@@ -1,30 +1,32 @@
-import React from 'react'
-import { useDraggable } from '@dnd-kit/core'
+import React from 'react';
+import { useDraggable } from '@dnd-kit/core';
 
 type DraggableProps = {
-	children: React.ReactNode
-	className?: string
+  children: React.ReactNode;
+  className?: string;
+  id: string;
 }
 
-export function Draggable({ children, className }: DraggableProps) {
-	const { attributes, listeners, setNodeRef, transform } = useDraggable({
-		id: 'draggable'
-	})
-	const style = transform
-		? {
-				transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`
-			}
-		: undefined
+export function Draggable({ children, className, id }: DraggableProps) {
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id,
+  });
+  const style = transform
+    ? {
+        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+      }
+    : undefined;
 
-	return (
-		<div
-			ref={setNodeRef}
-			style={style}
-			{...listeners}
-			{...attributes}
-			className={className}
-		>
-			{children}
-		</div>
-	)
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...listeners}
+      {...attributes}
+      className={className}
+    >
+      {children}
+    </div>
+  );
 }
+
