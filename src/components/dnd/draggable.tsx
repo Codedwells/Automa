@@ -2,6 +2,7 @@ import React from 'react'
 import { useDraggable } from '@dnd-kit/core'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
+import { GripVertical } from 'lucide-react'
 
 type DraggableProps = {
 	children: React.ReactNode
@@ -32,7 +33,7 @@ export function Draggable({
 			{...listeners}
 			{...attributes}
 			className={cn(
-				'flex cursor-move select-none hover:shadow items-center gap-1 rounded-md border-2 bg-white p-2',
+				'flex select-none items-center gap-1 rounded-md border-2 bg-white p-2 hover:shadow',
 				className
 			)}
 		>
@@ -51,6 +52,9 @@ export function Draggable({
 					Add an email workflow
 				</p>
 			</div>
+			<span className='ml-1 rounded bg-gray-100 py-[4px] text-gray-700 hover:cursor-grab'>
+				<GripVertical size={20} />
+			</span>
 		</div>
 	)
 }
