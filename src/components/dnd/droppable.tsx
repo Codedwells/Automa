@@ -14,7 +14,7 @@ export function Droppable({ children, className, id }: DroppableProps) {
   });
 
   return (
-    <div ref={setNodeRef} className={cn({"!bg-green-100":isOver},className)}>
+    <div ref={setNodeRef} className={cn({"!border-green-600 !bg-emerald-600/5 shadow-md":isOver},className)}>
       {children}
     </div>
   );
