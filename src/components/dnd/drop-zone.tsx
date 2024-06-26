@@ -17,6 +17,7 @@ import {
 import { Draggable } from './draggable'
 import { Droppable } from './droppable'
 import { SortableItem } from './sortable-item'
+import { Play } from 'lucide-react'
 
 type TDraggableItems = { name: string; id: UniqueIdentifier; image: string }
 
@@ -102,20 +103,26 @@ export function DropZone() {
 					id='dropzone'
 					className='my-4 ml-8 h-fit min-h-[80vh] w-[300px] items-center justify-center rounded-md border border-dashed border-black bg-gray-50'
 				>
-					<div className='flex flex-col items-center border-b py-3'>
-						<p className='text-lg font-semibold'>
-							Workflows Stacks
-						</p>
-						<p className='-mt-1 text-xs text-gray-600'>
-							Arrange your workflows here
-						</p>
+					<div className='flex items-center justify-between border-b p-3'>
+						<div className='flex flex-col'>
+							<p className='text-lg font-semibold'>
+								Workflows Stacks
+							</p>
+							<p className='-mt-1 text-xs text-gray-600'>
+								Arrange your workflows here
+							</p>
+						</div>
+						<button className='flex rounded bg-green-600 p-2 text-white hover:opacity-80 active:opacity-60'>
+							<Play size={22} className='hover:animate-pulse' />{' '}
+							Run
+						</button>
 					</div>
 
 					<SortableContext
 						items={items}
 						strategy={verticalListSortingStrategy}
 					>
-						<div className='p-3 space-y-2'>
+						<div className='space-y-2 p-3'>
 							{items.map((item) => (
 								<SortableItem
 									key={v4()}
