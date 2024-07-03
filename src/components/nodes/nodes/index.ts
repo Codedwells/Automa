@@ -1,24 +1,38 @@
-import type { Node, NodeTypes } from "reactflow";
-import { PositionLoggerNode } from "./PositionLoggerNode";
+import type { Node, NodeTypes } from 'reactflow'
+import finalNode from './final-node'
+import throughNode from './through-node'
+import sourceNode from './source-node'
 
 export const initialNodes = [
-  { id: "a", type: "input", position: { x: 0, y: 0 }, data: { label: "wire" } },
-  {
-    id: "b",
-    type: "position-logger",
-    position: { x: -100, y: 100 },
-    data: { label: "drag me!" },
-  },
-  { id: "c", position: { x: 100, y: 100 }, data: { label: "your ideas" } },
-  {
-    id: "d",
-    type: "output",
-    position: { x: 0, y: 200 },
-    data: { label: "with React Flow" },
-  },
-] satisfies Node[];
+	{
+		id: 'a',
+		type: 'sourceNode',
+		position: { x: -288, y: -452 },
+		data: { label: 'This is the father node', color: 'red' }
+	},
+	{
+		id: 'b',
+		type: 'throughNode',
+		position: { x: -536, y: -230 },
+		data: { label: 'drag me!', color: 'blue' }
+	},
+	{
+		id: 'c',
+		position: { x: -71, y: -228 },
+		type: 'throughNode',
+		data: { label: 'your ideas', color: 'green' }
+	},
+	{
+		id: 'd',
+		type: 'finalNode',
+		position: { x: -320, y: -27 },
+		data: { label: 'The final node here', color: 'orange' }
+	}
+] satisfies Node[]
 
 export const nodeTypes = {
-  "position-logger": PositionLoggerNode,
-  // Add any of your custom nodes here!
-} satisfies NodeTypes;
+	finalNode: finalNode,
+	sourceNode: sourceNode,
+	throughNode: throughNode
+	// Add any of your custom nodes here!
+} satisfies NodeTypes

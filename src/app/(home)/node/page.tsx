@@ -6,7 +6,6 @@ import { useCallback } from 'react'
 import {
 	Background,
 	Controls,
-	MiniMap,
 	ReactFlow,
 	addEdge,
 	useNodesState,
@@ -26,7 +25,7 @@ export default function Page() {
 	)
 
 	return (
-		<div className='h-[80vh]'>
+		<div className='h-[91vh]'>
 			<ReactFlow
 				nodes={nodes}
 				nodeTypes={nodeTypes}
@@ -38,7 +37,6 @@ export default function Page() {
 				fitView
 			>
 				<Background />
-				<MiniMap />
 				<Controls />
 			</ReactFlow>
 		</div>
