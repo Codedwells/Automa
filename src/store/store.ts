@@ -53,8 +53,8 @@ export const nodeTypes = {
 	throughNode: throughNode
 } satisfies NodeTypes
 
-type ModuleTypes = keyof typeof nodeTypes
-type NodeColors = 'red' | 'blue' | 'green' | 'orange'
+export type ModuleTypes = keyof typeof nodeTypes
+export type NodeColors = 'red' | 'blue' | 'green' | 'orange'
 
 export const initialEdges = [
 	{ id: 'a->c', source: 'a', target: 'c', animated: true },
@@ -74,6 +74,7 @@ export type RFState = {
 	onConnect: OnConnect
 	setNodes: (nodes: Node[]) => void
 	setEdges: (edges: Edge[]) => void
+	addNode: (moduleType: ModuleTypes, color: NodeColors) => void
 	addNodeBetween: (
 		parentNodeId: string,
 		moduleType: ModuleTypes,
@@ -105,6 +106,18 @@ const useNodeStore = create<RFState>((set, get) => ({
 	},
 	setEdges: (edges: Edge[]) => {
 		set({ edges })
+	},
+	addNode: (moduleType: ModuleTypes, color: NodeColors) => {
+		const nodes = get().nodes
+
+		const newNode = {
+			id: uuidv4(),
+			type: moduleType,
+			position: { x: -300, y: -470 },
+			data: { label: 'New Node', color }
+		}
+
+		set({ nodes: [...nodes, newNode] })
 	},
 	addNodeBetween: (
 		parentNodeId: string,
