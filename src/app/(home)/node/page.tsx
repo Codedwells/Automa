@@ -1,28 +1,24 @@
 'use client'
 
-import type { OnConnect } from 'reactflow'
-
-import { useCallback } from 'react'
-import {
-	Background,
-	Controls,
-	ReactFlow,
-	addEdge,
-	useNodesState,
-	useEdgesState
-} from 'reactflow'
+import { useShallow } from 'zustand/react/shallow'
+import { Background, Controls, ReactFlow } from 'reactflow'
 
 import 'reactflow/dist/style.css'
-import { initialNodes, nodeTypes } from '@/components/nodes/nodes'
-import { edgeTypes, initialEdges } from '@/components/nodes/edges'
+import { nodeTypes } from '@/components/nodes/nodes'
+import { edgeTypes } from '@/components/nodes/edges'
+import useNodeStore from '@/store/store'
+
+const selector = (state: any) => ({
+	nodes: state.nodes,
+	edges: state.edges,
+	onNodesChange: state.onNodesChange,
+	onEdgesChange: state.onEdgesChange,
+	onConnect: state.onConnect
+})
 
 export default function Page() {
-	const [nodes, , onNodesChange] = useNodesState(initialNodes)
-	const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)
-	const onConnect: OnConnect = useCallback(
-		(connection) => setEdges((edges) => addEdge(connection, edges)),
-		[setEdges]
-	)
+	const { nodes, edges, onNodesChange, onEdgesChange, onConnect } =
+		useNodeStore(useShallow(selector))
 
 	return (
 		<div className='h-[91vh]'>
