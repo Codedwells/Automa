@@ -3,7 +3,7 @@ import finalNode from './final-node'
 import throughNode from './through-node'
 import sourceNode from './source-node'
 
-export const initialNodes = [
+const initialNodes = [
 	{
 		id: 'a',
 		type: 'sourceNode',
@@ -30,9 +30,8 @@ export const initialNodes = [
 	}
 ] satisfies Node[]
 
-export const nodeTypes = {
+const nodeTypes = {
 	finalNode: finalNode,
 	sourceNode: sourceNode,
 	throughNode: throughNode
-	// Add any of your custom nodes here!
 } satisfies NodeTypes

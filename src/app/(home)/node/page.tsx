@@ -1,14 +1,12 @@
 'use client'
 
 import { useShallow } from 'zustand/react/shallow'
-import { Background, Controls, ReactFlow } from 'reactflow'
+import { Controls, ReactFlow } from 'reactflow'
 
 import 'reactflow/dist/style.css'
-import { nodeTypes } from '@/components/nodes/nodes'
-import { edgeTypes } from '@/components/nodes/edges'
-import useNodeStore from '@/store/store'
+import useNodeStore, { RFState, edgeTypes, nodeTypes } from '@/store/store'
 
-const selector = (state: any) => ({
+const selector = (state: RFState) => ({
 	nodes: state.nodes,
 	edges: state.edges,
 	onNodesChange: state.onNodesChange,
@@ -21,7 +19,7 @@ export default function Page() {
 		useNodeStore(useShallow(selector))
 
 	return (
-		<div className='h-[91vh]'>
+		<div className='h-[91vh] bg-gray-100'>
 			<ReactFlow
 				nodes={nodes}
 				nodeTypes={nodeTypes}
@@ -32,7 +30,6 @@ export default function Page() {
 				onConnect={onConnect}
 				fitView
 			>
-				<Background />
 				<Controls />
 			</ReactFlow>
 		</div>
