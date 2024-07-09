@@ -1,5 +1,5 @@
-import { Clock, Plus, Rss } from 'lucide-react'
-import React, { memo } from 'react'
+import { Clock, Plus, Rss, Trash } from 'lucide-react'
+import React, { memo, useEffect, useState } from 'react'
 import { Handle, Position, NodeProps } from 'reactflow'
 import {
 	Popover,
@@ -8,17 +8,30 @@ import {
 } from '@/components/ui/popover'
 import { Button } from '@/components/ui/button'
 import useNodeStore from '@/store/store'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 
 export default memo(({ xPos, yPos, id, data }: NodeProps) => {
-	const addNodeBetween = useNodeStore((state) => state.addNodeBetween)
-    const deleteNode = useNodeStore((state) => state.deleteNode)
+	const [url, setUrl] = useState('')
+	const { addNodeBetween, deleteNode, updateNodeData } = useNodeStore(
+		(state) => state
+	)
 
 	const handleAddNode = () => {
-		addNodeBetween(id, 'throughNode','blue')
+		addNodeBetween(id, 'throughNode', 'blue')
 	}
-    const handleDeleteNode = () => {
-        deleteNode(id)
-    }
+	const handleDeleteNode = () => {
+		deleteNode(id)
+	}
+
+	const handleUpdateNodeData = () => {
+		updateNodeData(id, { url })
+	}
+
+	useEffect(() => {
+		setUrl(data?.url)
+	}, [])
+
 	return (
 		<div className=''>
 			<figure className='group/node relative'>
@@ -33,7 +46,21 @@ export default memo(({ xPos, yPos, id, data }: NodeProps) => {
 						</div>
 					</PopoverTrigger>
 					<PopoverContent side='right'>
-						Modify Item setting here
+						<div>
+							<div className='space-y-1'>
+								<Label>URL</Label>
+								<Input
+									value={url}
+									onChange={(e) => setUrl(e.target.value)}
+								/>
+							</div>
+							<Button
+								onClick={handleUpdateNodeData}
+								className='mt-2'
+							>
+								Update
+							</Button>
+						</div>
 					</PopoverContent>
 				</Popover>
 
@@ -46,8 +73,19 @@ export default memo(({ xPos, yPos, id, data }: NodeProps) => {
 						</div>
 					</PopoverTrigger>
 					<PopoverContent side='right'>
-						<Button onClick={handleAddNode}>Add Node</Button>
-                        <Button onClick={handleDeleteNode}>Delete Node</Button>
+						<div className='mt-2 flex gap-2'>
+							<Button onClick={handleAddNode} className='flex-1'>
+								Add node&nbsp;
+								<Plus className='mr-2 h-4 w-4' />
+							</Button>
+							<Button
+								onClick={handleDeleteNode}
+								className='flex items-center justify-center rounded-full'
+								variant='destructive'
+							>
+								Delete&nbsp; <Trash className='mr-2 h-4 w-4' />
+							</Button>
+						</div>
 					</PopoverContent>
 				</Popover>
 

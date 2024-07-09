@@ -1,5 +1,5 @@
-import { Clock, Plus, Rss } from 'lucide-react'
-import React, { memo } from 'react'
+import { Clock, Plus, Rss, Trash } from 'lucide-react'
+import React, { memo, useEffect, useState } from 'react'
 import { Handle, Position, NodeProps } from 'reactflow'
 import {
 	Popover,
@@ -8,13 +8,24 @@ import {
 } from '@/components/ui/popover'
 import useNodeStore from '@/store/store'
 import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
 
 export default memo(({ xPos, yPos, id, data }: NodeProps) => {
-	const deleteNode = useNodeStore((state) => state.deleteNode)
+	const [url, setUrl] = useState('')
+	const { updateNodeData, deleteNode } = useNodeStore((state) => state)
 
 	const handleDeleteNode = () => {
 		deleteNode(id)
 	}
+
+	const handleUpdateNodeData = () => {
+		updateNodeData(id, { url })
+	}
+
+	useEffect(() => {
+		setUrl(data?.url)
+	}, [])
 	return (
 		<div className=''>
 			<figure className='group/node relative'>
@@ -29,7 +40,21 @@ export default memo(({ xPos, yPos, id, data }: NodeProps) => {
 						</div>
 					</PopoverTrigger>
 					<PopoverContent side='right'>
-						Modify Item setting here
+						<div>
+							<div className='space-y-1'>
+								<Label>URL</Label>
+								<Input
+									value={url}
+									onChange={(e) => setUrl(e.target.value)}
+								/>
+							</div>
+							<Button
+								onClick={handleUpdateNodeData}
+								className='mt-2'
+							>
+								Update
+							</Button>
+						</div>
 					</PopoverContent>
 				</Popover>
 
@@ -42,7 +67,13 @@ export default memo(({ xPos, yPos, id, data }: NodeProps) => {
 						</div>
 					</PopoverTrigger>
 					<PopoverContent side='right'>
-						<Button onClick={handleDeleteNode}>Delete Node</Button>
+						<Button
+							onClick={handleDeleteNode}
+							className='flex items-center w-full justify-center rounded-full'
+							variant='destructive'
+						>
+							Delete&nbsp; <Trash className='mr-2 h-4 w-4' />
+						</Button>
 					</PopoverContent>
 				</Popover>
 

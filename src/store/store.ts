@@ -18,6 +18,7 @@ import finalNode from '@/components/nodes/nodes/final-node'
 import sourceNode from '@/components/nodes/nodes/source-node'
 import throughNode from '@/components/nodes/nodes/through-node'
 import { v4 as uuidv4 } from 'uuid'
+import { TLogItem, runNodeWorkflows } from '@/lib/workflows'
 
 // Initial state
 const initialNodes = [
@@ -25,27 +26,23 @@ const initialNodes = [
 		id: 'a',
 		type: 'sourceNode',
 		position: { x: -288, y: -452 },
-		data: { label: 'This is the father node', color: 'red' }
-	},
-	{
-		id: 'b',
-		type: 'throughNode',
-		position: { x: -536, y: -230 },
-		data: { label: 'drag me!', color: 'blue' }
+		data: { label: 'This is the father node', color: 'red', url: 'https://jsonplaceholder.typicode.com/todos/1' }
 	},
 	{
 		id: 'c',
 		position: { x: -71, y: -228 },
 		type: 'throughNode',
-		data: { label: 'your ideas', color: 'green' }
+		data: { label: 'your ideas', color: 'green', url: 'https://jsonplaceholder.typicode.com/todos/2' }
 	},
 	{
 		id: 'd',
 		type: 'finalNode',
 		position: { x: -320, y: -27 },
-		data: { label: 'The final node here', color: 'orange' }
+		data: { label: 'The final node here', color: 'orange', url: 'https://jsonplaceholder.typicode.com/todos/3' }
 	}
 ] satisfies Node[]
+
+export type CustomNodesType = (typeof initialNodes)[0]
 
 export const nodeTypes = {
 	finalNode: finalNode,
@@ -81,6 +78,8 @@ export type RFState = {
 		color: NodeColors
 	) => void
 	deleteNode: (nodeId: string) => void
+	updateNodeData: (nodeId: string, data: any) => void
+	runWorkflow: () => Promise<TLogItem[]>
 }
 
 const useNodeStore = create<RFState>((set, get) => ({
@@ -188,6 +187,33 @@ const useNodeStore = create<RFState>((set, get) => ({
 		}
 
 		set({ nodes: newNodes, edges: newEdges })
+	},
+	updateNodeData: (nodeId: string, data: any) => {
+		const nodes = get().nodes
+		const node = nodes.find((node) => node.id === nodeId)
+		if (!node) return
+
+		const newNodes = nodes.map((node) => {
+			if (node.id === nodeId) {
+				return {
+					...node,
+					data: {
+						...node.data,
+						...data
+					}
+				}
+			}
+			return node
+		})
+
+		set({ nodes: newNodes })
+	},
+	runWorkflow: async () => {
+		const response = await runNodeWorkflows(
+			get().nodes as CustomNodesType[]
+		)
+
+		return response
 	}
 }))
 
